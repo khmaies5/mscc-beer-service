@@ -1,8 +1,9 @@
 package com.khmaies.msccbeerservice.web.controller;
 
+import com.khmaies.msccbeerservice.common.errors.TargetType;
 import com.khmaies.msccbeerservice.service.IBeerService;
+import com.khmaies.msccbeerservice.web.controller.validators.BeerDataValidator;
 import com.khmaies.msccbeerservice.web.model.BeerDto;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;
@@ -10,10 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
+
 @Validated
 @RestController
 @RequestMapping("/api/v1/")
@@ -21,15 +20,17 @@ public class BeerController {
 
     private final IBeerService beerService;
 
-    public BeerController(IBeerService beerService) {
-        this.beerService = beerService;
-    }
+    private final BeerDataValidator beerDataValidator;
 
+
+    public BeerController(IBeerService beerService, BeerDataValidator beerDataValidator) {
+        this.beerService = beerService;
+        this.beerDataValidator = beerDataValidator;
+    }
 
     @GetMapping("beer/{beerId}")
     public ResponseEntity<BeerDto> getBeerById(@NotNull @PathVariable UUID beerId) {
-
-        //todo impl
+        beerDataValidator.validateBeerId(TargetType.BEER_RETRIEVAL, beerId);
         return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
     }
 
@@ -56,6 +57,7 @@ public class BeerController {
     @DeleteMapping("beer/{beerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBeerById(@PathVariable UUID beerId) {
+        beerDataValidator.validateBeerId(TargetType.BEER_DELETION, beerId);
         beerService.deleteById(beerId);
     }
 
