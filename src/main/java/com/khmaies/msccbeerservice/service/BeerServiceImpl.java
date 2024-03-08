@@ -1,6 +1,7 @@
 package com.khmaies.msccbeerservice.service;
 
 import com.khmaies.msccbeerservice.web.model.BeerDto;
+import com.khmaies.msccbeerservice.web.model.BeerStyleEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class BeerServiceImpl implements IBeerService {
     public BeerDto getBeerById(UUID beerId) {
         return BeerDto.builder().id(UUID.randomUUID())
                 .beerName("Galaxy Cat")
-                .beerStyle("Pale Ale")
+                .beerStyle(BeerStyleEnum.ALE)
                 .build();
     }
 
