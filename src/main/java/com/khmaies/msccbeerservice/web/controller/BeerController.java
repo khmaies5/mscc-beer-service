@@ -1,29 +1,27 @@
 package com.khmaies.msccbeerservice.web.controller;
 
-import com.khmaies.msccbeerservice.service.IBeerService;
 import com.khmaies.msccbeerservice.web.model.BeerDto;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 @Validated
-@RestController
 @RequestMapping("/api/v1/")
+@RestController
 public class BeerController {
 
-    private final IBeerService beerService;
+    private final BeerService beerService;
 
-    public BeerController(IBeerService beerService) {
-        this.beerService = beerService;
+   @Autowired
+    public BeerController(BeerService beerService) {
+       this.beerService = beerService;
     }
 
 
@@ -41,7 +39,7 @@ public class BeerController {
 
         HttpHeaders headers = new HttpHeaders();
         //todo add hostname to url
-        headers.add("Location", "/api/v1/beer" + savedDto.getId().toString());
+        headers.add("Location", "/api/v1/beer" + savedDto.getId());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
